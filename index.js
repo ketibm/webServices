@@ -1,25 +1,35 @@
 const express = require("express");
-const { 
-    createNewCar,
-    getCars,
-    getOneCar,
-    getSortedCars,
-    getByYear,
-    update,
-    removeCar} = require("./controllers/cars");
-require("./db/config");
-const app = express();
-app.use(express.json());
+require("dotenv").config();
+require("./pkg/db");
+const {
+    getAll,
+    getOne,
+    createOne,
+    updateOne,
+    removeOne,
+} = require("./handlers/cars");
+const {
+    getCarsLocal,
+    createLocalCar,
+    getOneLocalCar,
+    updateLocalCar,
+    removeLocalCar,
+} = require("./handlers/local");
 
-app.post("/cars", createNewCar);
-app.get("/cars", getCars);
-app.get("/cars/id/:id", getOneCar);
-app.get("/cars/sorted", getSortedCars);
-app.get("/cars/year/:year", getByYear);
-app.put("/cars/:id", update);
-app.delete("/cars/:id", removeCar);
+const api = express();
+api.use(express.json());
+api.get("/api/cars", getAll);
+api.get("/api/cars/:id", getOne);
+api.post("/api/cars", createOne);
+api.put("/api/cars/:id", updateOne);
+api.delete("/api/cars/:id", removeOne);
 
-const port = 3000;
-app.listen(port, () => {
-    console.log(`Server started at port ${port}`);
+api.get("/api/local/cars", getCarsLocal);
+api.get("/api/local/cars/:index", getOneLocalCar);
+api.post("/api/local/cars", createLocalCar);
+api.put("/api/local/cars/:index", updateLocalCar);
+api.delete("/api/local/cars/:index", removeLocalCar);
+
+api.listen(10000, (err) => {
+    err ? console.log(err) : console.log("Server started on port 10000");
 });
