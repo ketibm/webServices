@@ -1,35 +1,41 @@
 const express = require("express");
-require("dotenv").config();
+const { expressjwt: jwt } = require("express-jwt");
+const { getSection } = require("./pkg/config");
+const {
+  login,
+  register,
+  refreshToken,
+  resetPassword,
+} = require("./handlers/auth");
+
 require("./pkg/db");
-const {
-    getAll,
-    getOne,
-    createOne,
-    updateOne,
-    removeOne,
-} = require("./handlers/cars");
-const {
-    getCarsLocal,
-    createLocalCar,
-    getOneLocalCar,
-    updateLocalCar,
-    removeLocalCar,
-} = require("./handlers/local");
 
-const api = express();
-api.use(express.json());
-api.get("/api/cars", getAll);
-api.get("/api/cars/:id", getOne);
-api.post("/api/cars", createOne);
-api.put("/api/cars/:id", updateOne);
-api.delete("/api/cars/:id", removeOne);
+const app = express();
 
-api.get("/api/local/cars", getCarsLocal);
-api.get("/api/local/cars/:index", getOneLocalCar);
-api.post("/api/local/cars", createLocalCar);
-api.put("/api/local/cars/:index", updateLocalCar);
-api.delete("/api/local/cars/:index", removeLocalCar);
 
-api.listen(10000, (err) => {
-    err ? console.log(err) : console.log("Server started on port 10000");
+app.use(express.json());
+app.use(
+  jwt({
+    secret: getSection("development").jwt_secret,
+    algorithms: ["HS256"],
+  }).unless({
+    path: [
+      "/api/auth/login",
+      "/api/auth/register",
+      "/api/auth/forgot-password",
+      "/api/auth/reset-password",
+    ],
+  })
+);
+
+
+app.post("/api/auth/login", login);
+app.get("/api/auth/refresh-token", refreshToken);
+app.post("/api/auth/register", register);
+app.post("/api/auth/reset-password", resetPassword);
+
+
+
+app.listen(getSection("development").port, () => {
+  console.log(`Server started at port ${getSection("development").port}`);
 });
