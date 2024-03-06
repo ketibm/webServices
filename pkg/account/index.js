@@ -26,7 +26,7 @@ const getById = async (id) => {
 };
 
 const getByEmail = async (email) => {
-    return await Account.findOne({ email: email });
+    return await Account.findOne({ email });
 };
 
 const setNewPassword = async (id, password) => {
@@ -38,7 +38,7 @@ const getAll = async () => {
 };
 
 const update = async (id, acc) => {
-    return await Account.updateOne({ _id: id }, acc );
+    return await Account.updateOne({ _id: id }, acc);
 };
 
 const remove = async (id) => {
@@ -46,11 +46,11 @@ const remove = async (id) => {
 };
 
 const successfulLogin = async (email) => {
-    await Account.updateOne({ email }, { $inc: { successedAttempts: 1 } });
+    return await Account.updateOne({ email }, { $inc: { successedAttempts: 1 } });
 };
 
 const unsuccessfulLogin = async (email) => {
-    await Account.updateOne({ email }, { $inc: { failedAttempts: 1 } });
+    return await Account.updateOne ({ email }, { $inc: { failedAttempts: 1 } });
 };
 
 module.exports = {

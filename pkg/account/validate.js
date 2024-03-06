@@ -12,8 +12,6 @@ const AccountRegister = {
     password: "required|string",
     confirmPassword: "required|string",
     fullName: "required|string",
-    successedAttempts: "required|numeric",
-    failedAttempts: "required|numeric",
 };
 
 const AccountReset = {
@@ -25,9 +23,9 @@ const AccountReset = {
 const validate = async (data, schema) => {
     let v = new Validator(data, schema);
     let e = v.check();
-    if(!e) {
+    if (!e) {
         throw {
-            code:400,
+            code: 400,
             error: v.errors,
         };
     }
@@ -38,4 +36,5 @@ module.exports = {
     AccountRegister,
     AccountReset,
     validate,
-  };
+};
+
