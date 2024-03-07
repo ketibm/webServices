@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
-const recipeSchema = mongoose.Schema({
+
+const receptSchema = mongoose.Schema({
     user_id: {
         type: mongoose.SchemaTypes.ObjectId,
         ref: "Account",
@@ -8,34 +9,40 @@ const recipeSchema = mongoose.Schema({
     title: String,
     ingredients: String,
     preparationTime: String,
-    calories: Number,
-});
+    nutritionInfo: {
+            calories: Number,
+            totalFats: String,
+            carbohydrates: String,
+            dietaryFiber: String,
+            proteins: String,
+        },
+    });
 
-const Recipe = mongoose.model("Recipe", recipeSchema, "recipes");
+const Recept = mongoose.model("Recept", receptSchema, "recepti");
 
 const getAll = async (user_id) => {
-    return await Recipe.find({ user_id });
+    return await Recept.find({ user_id });
 };
 
 const getOne = async (user_id, id) => {
-    return await Recipe.findOne({ _id: id, user_id});
+    return await Recept.findOne({ _id: id, user_id});
 };
 
 const getAllAlphabetically = async (user_id) => {
-    return await Recipe.find({user_id}).sort({title: 1});
+    return await Recept.find({user_id}).sort({title: 1});
 };
 
 const create = async (data) => {
-    const recipe = new Recipe(data);
-    return await recipe.save();
+    const recept = new Recept(data);
+    return await recept.save();
 };
 
 const update = async (id, data) => {
-    return await Recipe.updateOne({ _id: id },  data );
+    return await Recept.updateOne({ _id: id },  data );
 };
 
 const remove = async (id) => {
-    return await Recipe.deleteOne({ _id: id });
+    return await Recept.deleteOne({ _id: id });
 };
 
 module.exports = {

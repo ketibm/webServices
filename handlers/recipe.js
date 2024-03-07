@@ -7,14 +7,14 @@ const {
     remove,
 } = require("../pkg/blog");
 const {
-    Recipe,
+    Recept,
     validate,
 } = require("../pkg/blog/validate");
 
 const getAllRecipes = async (req, res) => {
     try{
-        const recipes = await getAll(req.auth.id);
-        return res.status(200).send(recipes);
+        const recepti = await getAll(req.auth.id);
+        return res.status(200).send(recepti);
     }catch(err){
        return res.status(500).send("Internal Server Error");
     }
@@ -40,22 +40,20 @@ const getAllAlphabeticallyByTitle = async (req, res) => {
         }
         return res.status(200).send(data);
     }catch(err){
-        console.error("Error fetching recipes alphabetically:", err);
         return res.status(500).send("Internal Server Error");
     }
 };
 
 const createRecipe = async (req, res) => {
     try{
-        await validate(req.body, Recipe);
+        await validate(req.body, Recept);
         const data = {
             ...req.body,
             user_id: req.auth.id,
         };
-        const newRecipe = await create(data);
-        return res.status(200).send(newRecipe);
+        const newRecept = await create(data);
+        return res.status(200).send(newRecept);
     }catch(err){
-        console.error("Error creating recipe:", err); 
         return res.status(500).send("Internal Server Error");
     }
 };
@@ -66,8 +64,8 @@ const updateRecipe = async (req, res) => {
             ...req.body,
             user_id: req.auth.id,
         };
-        const newRecipe = await update(req.params.id, data);
-        return res.status(200).send(newRecipe);
+        const newRecept = await update(req.params.id, data);
+        return res.status(200).send(newRecept);
     }catch(err){
         return res.status(500).send("Internal Server Error");
     }

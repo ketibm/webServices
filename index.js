@@ -39,10 +39,10 @@ app.get("/api/auth/refresh-token", refreshToken);
 app.post("/api/auth/register", register);
 app.post("/api/auth/reset-password", resetPassword);
 
+app.get("/api/recipe/title/", getAllAlphabeticallyByTitle);
 app.get("/api/recipe", getAllRecipes);
 app.post("/api/recipe", createRecipe);
 app.get("/api/recipe/:id", getOneRecipe);
-app.get("/api/recipe/title/:user_id", getAllAlphabeticallyByTitle);
 app.put("/api/recipe/:id", updateRecipe);
 app.delete("/api/recipe/:id", deleteRecipe);
 
