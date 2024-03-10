@@ -1,23 +1,24 @@
 const express = require("express");
-const { expressjwt: jwt} = require("express-jwt");
+const { expressjwt: jwt } = require("express-jwt");
 const { getSection } = require("./pkg/config");
+const fileUpload = require("express-fileupload");
 
 const {
     login,
     register,
     refreshToken,
     resetPassword,
-} = require("./handlers/auth");
+  } = require("./handlers/auth");
 
-const {
-    getAllRecipes,
-    getOneRecipe,
-    getAllAlphabeticallyByTitle,
-    createRecipe,
-    updateRecipe,
-    deleteRecipe,
-} = require("./handlers/recipe")
+  const {
+    upload,
+    download,
+    listFilesForUser,
+    removeFile,
+  } = require("./handlers/storage");
+  
 require("./pkg/db");
+
 const app = express();
 app.use(express.json());
 app.use(
@@ -26,27 +27,26 @@ app.use(
         algorithms: ["HS256"],
     }).unless({
         path: [
-        "/api/auth/login",
-        "/api/auth/register",
-        "/api/auth/forgot-password",
-        "/api/auth/reset-password",  
+            "/api/auth/login",
+            "/api/auth/register",
+            "/api/auth/forgot-password",
+            "/api/auth/reset-password",
         ],
     })
 );
+
+app.use(fileUpload());
 
 app.post("/api/auth/login", login);
 app.get("/api/auth/refresh-token", refreshToken);
 app.post("/api/auth/register", register);
 app.post("/api/auth/reset-password", resetPassword);
 
-app.get("/api/recipe/title/", getAllAlphabeticallyByTitle);
-app.get("/api/recipe", getAllRecipes);
-app.post("/api/recipe", createRecipe);
-app.get("/api/recipe/:id", getOneRecipe);
-app.put("/api/recipe/:id", updateRecipe);
-app.delete("/api/recipe/:id", deleteRecipe);
-
+app.post("/api/storage", upload);
+app.get("/api/storage/:filename", download);
+app.delete("/api/storage/:filename", removeFile);
+app.get("/api/list", listFilesForUser);
 
 app.listen(getSection("development").port, () => {
     console.log(`Server started at port ${getSection("development").port}`);
-  }); 
+});

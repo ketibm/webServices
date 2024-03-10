@@ -4,14 +4,6 @@ const accountSchema = mongoose.Schema({
     email: String,
     password: String,
     fullName: String,
-    successedAttempts: {
-        type: Number,
-        default: 0,
-    },
-    failedAttempts: {
-        type: Number,
-        default: 0,
-    },
 });
 
 const Account = mongoose.model("Account", accountSchema, "accounts");
@@ -30,7 +22,7 @@ const getByEmail = async (email) => {
 };
 
 const setNewPassword = async (id, password) => {
-    return await Account.updateOne({ _id: id }, { password });
+    return await Account.updateOne({ _id: id }, password);
 };
 
 const getAll = async () => {
@@ -45,13 +37,6 @@ const remove = async (id) => {
     return await Account.deleteOne({ _id: id });
 };
 
-const successfulLogin = async (email) => {
-    return await Account.updateOne({ email }, { $inc: { successedAttempts: 1 } });
-};
-
-const unsuccessfulLogin = async (email) => {
-    return await Account.updateOne ({ email }, { $inc: { failedAttempts: 1 } });
-};
 
 module.exports = {
     create,
@@ -61,6 +46,4 @@ module.exports = {
     getAll,
     update,
     remove,
-    successfulLogin,
-    unsuccessfulLogin,
-};
+  };
